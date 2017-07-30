@@ -75,6 +75,7 @@ function onReset() {
 
   // TODO(optional): You can restart the game as well
   // <your code here>
+  gameReset()
 };
 
 // Add a callback to notify when camera access is allowed
@@ -103,6 +104,7 @@ detector.addEventListener("onInitializeSuccess", function() {
 
   // TODO(optional): Call a function to initialize the game, if needed
   // <your code here>
+  initializeGameFun()
 });
 
 // Add a callback to receive the results from processing an image
@@ -134,6 +136,7 @@ detector.addEventListener("onImageResultsSuccess", function(faces, image, timest
 
     // TODO: Call your function to run the game (define it first!)
     // <your code here>
+    updateGameFun(faces[0]);
   }
 });
 
@@ -172,7 +175,7 @@ function drawEmoji(canvas, img, face) {
   // <your code here>
   var faceSize = (face.featurePoints[10].x - face.featurePoints[5].x)/2;
   ctx.font = faceSize + 'px sans-serif';
-  ctx.fillStyle = 'rgb(0,0,200)';
+  ctx.fillStyle = 'rgb(255,255,255)';
   
   // TODO: Draw it using ctx.strokeText() or fillText()
   // See: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
@@ -183,6 +186,8 @@ function drawEmoji(canvas, img, face) {
 }
 
 // TODO: Define any variables and functions to implement the Mimic Me! game mechanics
+ // [ 128528, 9786, 128515, 128524, 128527, 128521, 128535, 128539, 128540, 128542, 128545, 128563, 128561 ];
+var gameEmojis = [ 128528,  9786, 128515, 128521];
 
 // NOTE:
 // - Remember to call your update function from the "onImageResultsSuccess" event handler above
@@ -196,3 +201,38 @@ function drawEmoji(canvas, img, face) {
 // - Define a game reset function (same as init?), and call it from the onReset() function above
 
 // <your code here>
+var target
+var score
+
+function initializeGameFun(){
+  score = 0
+  setScore(score, 10);
+  target = randomPhrase(gameEmojis)
+  setTargetEmoji(target)
+}
+
+function updateGameFun(face) {
+  if (target == toUnicode(face.emojis.dominantEmoji) && score < 10){
+    score ++;
+    target = randomPhrase(gameEmojis);
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }
+}
+
+function gameReset(){
+  score = 0;
+  setScore(score, 10);
+}
+
+function startGameTimer(face){
+
+}
+
+function randomPhrase(phraseArr) {
+    // returns a random phrase
+    // where phraseArr is an array of string phrases
+    var i = 0;
+    i = Math.floor(Math.random() * phraseArr.length);
+    return (phraseArr[i]);
+};
