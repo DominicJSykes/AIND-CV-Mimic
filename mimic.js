@@ -65,7 +65,7 @@ function onStop() {
 };
 
 // Reset button
-function onReset() {
+function onReset(timestamp) {
   log('#logs', "Reset button pressed");
   if (detector && detector.isRunning) {
     detector.reset();
@@ -75,7 +75,7 @@ function onReset() {
 
   // TODO(optional): You can restart the game as well
   // <your code here>
-  gameReset()
+  gameReset(timestamp)
 };
 
 // Add a callback to notify when camera access is allowed
@@ -137,6 +137,7 @@ detector.addEventListener("onImageResultsSuccess", function(faces, image, timest
     // TODO: Call your function to run the game (define it first!)
     // <your code here>
     //updateGameFun(faces[0]);
+    wait 10 seconds
     startGameTimer(faces[0], timestamp)
   }
 });
@@ -205,38 +206,134 @@ var gameEmojis = [ 128528,  9786, 128515, 128521];
 var target
 var score
 var timer
+var scoreOne
+var scoreTwo
 
-function initializeGameFun(timestamp){
+function initializeGameFun(){
   score = 0;
   setScore(score, 10);
-  timer = timestamp;
+  timer = 0;
   target = randomPhrase(gameEmojis);
   setTargetEmoji(target);
 }
 
-function updateGameFun(face) {
+function updateGameFun(canvas, face) {
   if (target == toUnicode(face.emojis.dominantEmoji) && score < 10){
     score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Success", 100, 100);
+
     target = randomPhrase(gameEmojis);
     setTargetEmoji(target);
     setScore(score, 10);
+  }
+  if (score == 10){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Congrationlations, you completed the game", 50, 100);
   }
 }
 
 function gameReset(timestamp){
   score = 0;
-  setScore(score, 10);
+  setScore(score, "-");
   timer = timestamp;
   target = randomPhrase(gameEmojis);
   setTargetEmoji(target);
 }
-//
+
 function startGameTimer(face, timestamp){
-  if (target == toUnicode(face.emojis.dominantEmoji) && (timestamp - timer) < 60){
+  if (target == toUnicode(face.emojis.dominantEmoji) && ((timestamp - timer) < 60 || score == 0)){
+    if (score == 0){
+      timer = timestamp
+    }
     score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Success", 100, 100);
+
     target = randomPhrase(gameEmojis);
     setTargetEmoji(target);
-    setScore(score, 10);
+    setScore(score, "-");
+  }
+  if ((timestamp - timer) > 60){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Game Over, you scored: " + score, 50, 100);
+  }
+}
+
+function startGameTimeout(face, timestamp){
+  if (target == toUnicode(face.emojis.dominantEmoji) && ((timestamp - timer) < 10 || score == 0)){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Success", 100, 100);
+
+    target = randomPhrase(gameEmojis);
+    setTargetEmoji(target);
+    setScore(score, "-");
+    timer = timestamp
+  }
+  if ((timestamp - timer) > 10 && score != 0){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Game Over, you scored: " + score, 50, 100);
+  }
+}
+
+function twoPlayerTimer(faceOne, faceTwo, timestamp){
+  if (target == toUnicode(faceOne.emojis.dominantEmoji) && ((timestamp - timer) < 60 || (scoreOne == 0 && scoreTwo == 0))){
+    if (scoreOne == 0 && scoreTwo == 0){
+      timer = timestamp
+    }
+    scoreOne ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Player One Success", 50, 100);
+
+    target = randomPhrase(gameEmojis);
+    setTargetEmoji(target);
+    setScore(score, "-");
+  }
+  if (target == toUnicode(faceTwo.emojis.dominantEmoji) && ((timestamp - timer) < 60 || (scoreOne == 0 && scoreTwo == 0))){
+    if (scoreOne == 0 && scoreTwo == 0){
+      timer = timestamp
+    }
+    scoreTwo ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Player One Success", 50, 100);
+
+    target = randomPhrase(gameEmojis);
+    setTargetEmoji(target);
+    setScore(score, "-");
+  }
+  if ((timestamp - timer) > 60 && scoreOne > scoreTwo){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Game Over, : " + score, 50, 100);
+  }
+  if ((timestamp - timer) > 60 && scoreOne < scoreTwo){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Game Over, you scored: " + score, 50, 100);
   }
 }
 
