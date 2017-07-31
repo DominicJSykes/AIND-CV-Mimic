@@ -136,7 +136,8 @@ detector.addEventListener("onImageResultsSuccess", function(faces, image, timest
 
     // TODO: Call your function to run the game (define it first!)
     // <your code here>
-    updateGameFun(faces[0]);
+    //updateGameFun(faces[0]);
+    startGameTimer(faces[0], timestamp)
   }
 });
 
@@ -203,12 +204,14 @@ var gameEmojis = [ 128528,  9786, 128515, 128521];
 // <your code here>
 var target
 var score
+var timer
 
-function initializeGameFun(){
-  score = 0
+function initializeGameFun(timestamp){
+  score = 0;
   setScore(score, 10);
-  target = randomPhrase(gameEmojis)
-  setTargetEmoji(target)
+  timer = timestamp;
+  target = randomPhrase(gameEmojis);
+  setTargetEmoji(target);
 }
 
 function updateGameFun(face) {
@@ -220,13 +223,21 @@ function updateGameFun(face) {
   }
 }
 
-function gameReset(){
+function gameReset(timestamp){
   score = 0;
   setScore(score, 10);
+  timer = timestamp;
+  target = randomPhrase(gameEmojis);
+  setTargetEmoji(target);
 }
-
-function startGameTimer(face){
-
+//
+function startGameTimer(face, timestamp){
+  if (target == toUnicode(face.emojis.dominantEmoji) && (timestamp - timer) < 60){
+    score ++;
+    target = randomPhrase(gameEmojis);
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }
 }
 
 function randomPhrase(phraseArr) {
