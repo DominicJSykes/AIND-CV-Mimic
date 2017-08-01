@@ -234,7 +234,7 @@ function updateGameFun(canvas, face) {
     var ctx = canvas.getContext('2d');
     ctx.font = '48 px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
-    ctx.fillText("Congrationlations, you completed the game", 50, 100);
+    ctx.fillText("Congratulations, you completed the game", 50, 100);
   }
 }
 
@@ -327,14 +327,139 @@ function twoPlayerTimer(faceOne, faceTwo, timestamp){
     var ctx = canvas.getContext('2d');
     ctx.font = '48 px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
-    ctx.fillText("Game Over, : " + score, 50, 100);
+    ctx.fillText("Game Over, Player One Wins: " + scoreOne + "to " + scoreTwo, 50, 100);
   }
   if ((timestamp - timer) > 60 && scoreOne < scoreTwo){
     var ctx = canvas.getContext('2d');
     ctx.font = '48 px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
-    ctx.fillText("Game Over, you scored: " + score, 50, 100);
+    ctx.fillText("Game Over, Player Two Wins: " + scoreTwo + "to " + scoreOne, 50, 100);
   }
+}
+
+function actingPractice(score){
+  if (score == 0){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("My dear Watson, must your time come so soon", 100, 100);
+    target = //smirk;
+    score ++;
+  }
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 1){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("We could of made such a team", 100, 100);
+
+    target = //kissing face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 2){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("But you threatened what is mine!", 100, 100);
+
+    target = //angry face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }  
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 3){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("And now I have my revenge", 100, 100);
+
+    target = //smile face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }  
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 4){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Imagine all those who will miss you, do you think Sherlock will shed a tear", 100, 100);
+
+    target = //sad face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }  
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 5){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Although I dare he wouldn't for any but for that Adler woman right", 100, 100);
+
+    target = //wink face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }  
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 6){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Oh what fun we shall have", 100, 100);
+
+    target = //wide smile face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }  
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 7){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Why are you smiling Watson", 100, 100);
+
+    target = //wide eyed face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }    
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 8){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Don't you know there is no hope", 100, 100);
+
+    target = //tongue out smiley face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }  
+  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 9){
+    score ++;
+
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Oh no, he's behind me isn't he, Why Sherlock why!", 100, 100);
+
+    target = //scream face;
+    setTargetEmoji(target);
+    setScore(score, 10);
+  }           
+  else if (score == 10){
+    var ctx = canvas.getContext('2d');
+    ctx.font = '48 px sans-serif';
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fillText("Congratulations, you completed acting practice", 50, 100);
+  } 
 }
 
 function randomPhrase(phraseArr) {
