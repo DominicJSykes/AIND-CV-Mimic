@@ -190,6 +190,11 @@ function drawEmoji(canvas, img, face) {
 // TODO: Define any variables and functions to implement the Mimic Me! game mechanics
  // [ 128528, 9786, 128515, 128524, 128527, 128521, 128535, 128539, 128540, 128542, 128545, 128563, 128561 ];
 var gameEmojis = [ 128528,  9786, 128515, 128521];
+var target;
+var score;
+var timer;
+var scoreOne;
+var scoreTwo;
 
 // NOTE:
 // - Remember to call your update function from the "onImageResultsSuccess" event handler above
@@ -203,11 +208,6 @@ var gameEmojis = [ 128528,  9786, 128515, 128521];
 // - Define a game reset function (same as init?), and call it from the onReset() function above
 
 // <your code here>
-var target
-var score
-var timer
-var scoreOne
-var scoreTwo
 
 function initializeGameFun(){
   score = 0;
