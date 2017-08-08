@@ -136,9 +136,8 @@ detector.addEventListener("onImageResultsSuccess", function(faces, image, timest
 
     // TODO: Call your function to run the game (define it first!)
     // <your code here>
-    //updateGameFun(faces[0]);
-    wait 10 seconds
-    startGameTimer(faces[0], timestamp)
+    //updateGameFun(canvas,faces[0]);
+    startGameTimer(canvas, faces[0], timestamp);
   }
 });
 
@@ -220,21 +219,24 @@ function initializeGameFun(){
 function updateGameFun(canvas, face) {
   if (target == toUnicode(face.emojis.dominantEmoji) && score < 10){
     score ++;
+    setScore(score, 10);
 
     var ctx = canvas.getContext('2d');
-    ctx.font = '48 px sans-serif';
+    ctx.font = '48px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
     ctx.fillText("Success", 100, 100);
 
+    //wait(2000);
+
     target = randomPhrase(gameEmojis);
     setTargetEmoji(target);
-    setScore(score, 10);
   }
   if (score == 10){
     var ctx = canvas.getContext('2d');
-    ctx.font = '48 px sans-serif';
+    ctx.font = '48px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
-    ctx.fillText("Congratulations, you completed the game", 50, 100);
+    ctx.fillText("Congratulations", 50, 50);
+    ctx.fillText("You completed the game!", 50, 100);
   }
 }
 
@@ -246,7 +248,7 @@ function gameReset(timestamp){
   setTargetEmoji(target);
 }
 
-function startGameTimer(face, timestamp){
+function startGameTimer(canvas, face, timestamp){
   if (target == toUnicode(face.emojis.dominantEmoji) && ((timestamp - timer) < 60 || score == 0)){
     if (score == 0){
       timer = timestamp
@@ -254,7 +256,7 @@ function startGameTimer(face, timestamp){
     score ++;
 
     var ctx = canvas.getContext('2d');
-    ctx.font = '48 px sans-serif';
+    ctx.font = '48px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
     ctx.fillText("Success", 100, 100);
 
@@ -264,13 +266,15 @@ function startGameTimer(face, timestamp){
   }
   if ((timestamp - timer) > 60){
     var ctx = canvas.getContext('2d');
-    ctx.font = '48 px sans-serif';
+    ctx.font = '48px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
-    ctx.fillText("Game Over, you scored: " + score, 50, 100);
+    ctx.fillText("Game Over!" + score, 50, 50);
+    ctx.fillText("You scored: " + score, 50, 100);
+  }
   }
 }
 
-function startGameTimeout(face, timestamp){
+function startGameTimeout(canvas, face, timestamp){
   if (target == toUnicode(face.emojis.dominantEmoji) && ((timestamp - timer) < 10 || score == 0)){
     score ++;
 
@@ -469,3 +473,11 @@ function randomPhrase(phraseArr) {
     i = Math.floor(Math.random() * phraseArr.length);
     return (phraseArr[i]);
 };
+
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
