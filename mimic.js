@@ -136,13 +136,13 @@ detector.addEventListener("onImageResultsSuccess", function(faces, image, timest
 
     // TODO: Call your function to run the game (define it first!)
     // <your code here>
-    //updateGameFun(canvas,faces[0]);
-    //updateGameTimer(canvas, faces[0], timestamp);
+    updateGameFun(canvas,faces[0]);
+    updateGameTimer(canvas, faces[0], timestamp);
     updateGameTimeout(canvas, faces[0], timestamp);
     drawFeaturePoints(canvas, image, faces[1]);
     drawEmoji(canvas, image, faces[1]);
-    //updateGameTwoPlayerTimer(faces[0], faces[1], timestamp);
-    //updateGameActingPractice(score);
+    updateGameTwoPlayerTimer(canvas, faces[0], faces[1], timestamp);
+    updateGameActingPractice(canvas, score);
   }
 });
 
@@ -215,6 +215,8 @@ var scoreTwo;
 
 function initializeGame(){
   score = 0;
+  scoreOne = 0;
+  scoreTwo = 0;
   setScore(score, "-");
   timer = 0;
   target = randomPhrase(gameEmojis);
@@ -223,6 +225,8 @@ function initializeGame(){
 
 function gameReset(timestamp){
   score = 0;
+  scoreOne = 0;
+  scoreTwo = 0;
   setScore(score, "-");
   timer = timestamp;
   target = randomPhrase(gameEmojis);
@@ -281,7 +285,7 @@ function updateGameTimeout(canvas, face, timestamp){
   }
 }
 
-function updateGameTwoPlayerTimer(faceOne, faceTwo, timestamp){
+function updateGameTwoPlayerTimer(canvas, faceOne, faceTwo, timestamp){
   if (target == toUnicode(faceOne.emojis.dominantEmoji) && ((timestamp - timer) < 60 || (scoreOne == 0 && scoreTwo == 0))){
     if (scoreOne == 0 && scoreTwo == 0){
       timer = timestamp
@@ -316,94 +320,48 @@ function updateGameTwoPlayerTimer(faceOne, faceTwo, timestamp){
   }
 }
 
-function updateGameActingPractice(score){
-  if (score == 0){
-    feedback(canvas, "My dear Watson, must your time come so soon", 10, 100);
-    target = 128527;
+function updateActingPractice(canvas, score, feedback, target){
     score ++;
+
+    for (var i = 0, n = feedback.length; i < n; i++){
+      feedback(canvas, feedback[i], 10, 100 + i * 50);
+    }
+
+    setTargetEmoji(target);
+    setScore(score, 10);
+}
+
+function updateGameActingPractice(canvas, score){
+  if (score == 0){
+    updateActingPractice(canvas, score, ["My dear Watson, must your time come so soon"], 128545)
   }
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 1){
-    score ++;
-
-    feedback(canvas, "We could of made such a team", 10, 100);
-
-    target = 128535;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["We could of made such a team"], 128535)
   }
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 2){
-    score ++;
-
-    feedback(canvas, "But you threatened what is mine!", 10, 100);
-
-    target = 128545;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["But you threatened what is mine!"], 128545)
   }  
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 3){
-    score ++;
-
-    feedback(canvas, "And now I have my revenge", 10, 100);
-
-    target = 9786;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["And now I have my revenge"], 9786)
   }  
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 4){
+    updateActingPractice(canvas, score, ["Imagine all those who will miss you","Do you think Sherlock will shed a tear"], 128542)
     score ++;
-
-    feedback(canvas, "Imagine all those who will miss you", 10, 100);
-    feedback(canvas, "Do you think Sherlock will shed a tear", 10, 100);
-
-    target = 128542;
-    setTargetEmoji(target);
-    setScore(score, 10);
   }  
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 5){
-    score ++;
-
-    feedback(canvas, "Although I dare say he wouldn't for any", 10, 100);
-    feedback(canvas, "but for that Adler woman right", 10, 100);    
-
-    target = 128521;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["Although I dare say he wouldn't for any","but for that Adler woman right"], 128521)
   }  
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 6){
-    score ++;
-
-    feedback(canvas, "Oh what fun we shall have", 10, 100);    
-
-    target = 128515;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["Oh what fun we shall have"], 128515)
   }  
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 7){
-    score ++;
-
-    feedback(canvas, "Why are you smiling Watson", 10, 100);    
-
-    target = 128563;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["Why are you smiling Watson"], 128563)
   }    
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 8){
-    score ++;
-
-    feedback(canvas, "Don't you know there is no hope", 10, 100);     
-
-    target = 128539;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["Don't you know there is no hope"], 128539)
   }  
   else if (target == toUnicode(face.emojis.dominantEmoji) && score == 9){
-    score ++;
-
-    feedback(canvas, "Oh no, he's behind me isn't he, Why Sherlock why!", 10, 100);
-
-    target = 128561;
-    setTargetEmoji(target);
-    setScore(score, 10);
+    updateActingPractice(canvas, score, ["Oh no, he's behind me isn't he, Why Sherlock why!"], 128561)
   }           
   else if (score == 10){
     feedback(canvas, "Congratulations, you completed acting practice", 10, 100);    
