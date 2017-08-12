@@ -137,12 +137,12 @@ detector.addEventListener("onImageResultsSuccess", function(faces, image, timest
     // TODO: Call your function to run the game (define it first!)
     // <your code here>
     updateGameFun(canvas,faces[0]);
-    updateGameTimer(canvas, faces[0], timestamp);
-    updateGameTimeout(canvas, faces[0], timestamp);
-    drawFeaturePoints(canvas, image, faces[1]);
-    drawEmoji(canvas, image, faces[1]);
-    updateGameTwoPlayerTimer(canvas, faces[0], faces[1], timestamp);
-    updateGameActingPractice(canvas, score);
+    //updateGameTimer(canvas, faces[0], timestamp);
+    //updateGameTimeout(canvas, faces[0], timestamp);
+    //drawFeaturePoints(canvas, image, faces[1]);
+    //drawEmoji(canvas, image, faces[1]);
+    //updateGameTwoPlayerTimer(canvas, faces[0], faces[1], timestamp);
+    //updateGameActingPractice(canvas, faces[0]);
   }
 });
 
@@ -199,6 +199,11 @@ var score;
 var timer;
 var scoreOne;
 var scoreTwo;
+var actingLines = [[""],["My dear Watson", "must your time come so soon"],["We could of made such a team"],["But you threatened what is mine!"],["And now I have my revenge"],
+   ["Imagine all those who will miss you","Do you think Sherlock will shed a tear"],["Although I dare say he wouldn't for any","but for that Adler woman right"],
+   ["Oh what fun we shall have"],["Why are you smiling Watson", "Don't you know there is no hope"],
+   ["Oh no, he's behind me isn't he"], ["Why Sherlock why!"]]
+var actingTargets = [128545,128535,128545,9786,128542,128521,128515,128563,128539,128561]
 
 // NOTE:
 // - Remember to call your update function from the "onImageResultsSuccess" event handler above
@@ -286,6 +291,14 @@ function updateGameTimeout(canvas, face, timestamp){
 }
 
 function updateGameTwoPlayerTimer(canvas, faceOne, faceTwo, timestamp){
+  if ((timestamp - timer) > 60 && scoreOne > scoreTwo){
+    feedback(canvas, "Game Over! Player One Wins", 50, 50);
+    feedback(canvas, scoreOne + " to " + scoreTwo, 50, 100);
+  }
+  if ((timestamp - timer) > 60 && scoreOne < scoreTwo){
+    feedback(canvas, "Game Over! Player Two Wins", 50, 50);
+    feedback(canvas, scoreOne + " to " + scoreTwo, 50, 100);
+  }
   if (target == toUnicode(faceOne.emojis.dominantEmoji) && ((timestamp - timer) < 60 || (scoreOne == 0 && scoreTwo == 0))){
     if (scoreOne == 0 && scoreTwo == 0){
       timer = timestamp
@@ -310,63 +323,30 @@ function updateGameTwoPlayerTimer(canvas, faceOne, faceTwo, timestamp){
     setTargetEmoji(target);
     setScore(scoreOne, scoreTwo);
   }
-  if ((timestamp - timer) > 60 && scoreOne > scoreTwo){
-    feedback(canvas, "Game Over! Player One Wins", 50, 50);
-    feedback(canvas, scoreOne + "to " + scoreTwo, 50, 100);
-  }
-  if ((timestamp - timer) > 60 && scoreOne < scoreTwo){
-    feedback(canvas, "Game Over! Player Two Wins", 50, 50);
-    feedback(canvas, scoreOne + "to " + scoreTwo, 50, 100);
-  }
 }
 
-function updateActingPractice(canvas, score, feedback, target){
+function updateActingPractice(canvas, lines, nextTarget){
     score ++;
-
-    for (var i = 0, n = feedback.length; i < n; i++){
-      feedback(canvas, feedback[i], 10, 100 + i * 50);
-    }
-
-    setTargetEmoji(target);
     setScore(score, 10);
+
+    target = nextTarget;
+    setTargetEmoji(target);
 }
 
-function updateGameActingPractice(canvas, score){
-  if (score == 0){
-    updateActingPractice(canvas, score, ["My dear Watson, must your time come so soon"], 128545)
+function updateGameActingPractice(canvas, face){
+  if (target == toUnicode(face.emojis.dominantEmoji) && score < 10){
+    updateActingPractice(canvas, actingLines[score], actingTargets[score])
   }
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 1){
-    updateActingPractice(canvas, score, ["We could of made such a team"], 128535)
-  }
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 2){
-    updateActingPractice(canvas, score, ["But you threatened what is mine!"], 128545)
-  }  
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 3){
-    updateActingPractice(canvas, score, ["And now I have my revenge"], 9786)
-  }  
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 4){
-    updateActingPractice(canvas, score, ["Imagine all those who will miss you","Do you think Sherlock will shed a tear"], 128542)
-    score ++;
-  }  
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 5){
-    updateActingPractice(canvas, score, ["Although I dare say he wouldn't for any","but for that Adler woman right"], 128521)
-  }  
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 6){
-    updateActingPractice(canvas, score, ["Oh what fun we shall have"], 128515)
-  }  
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 7){
-    updateActingPractice(canvas, score, ["Why are you smiling Watson"], 128563)
-  }    
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 8){
-    updateActingPractice(canvas, score, ["Don't you know there is no hope"], 128539)
-  }  
-  else if (target == toUnicode(face.emojis.dominantEmoji) && score == 9){
-    updateActingPractice(canvas, score, ["Oh no, he's behind me isn't he, Why Sherlock why!"], 128561)
-  }           
   else if (score == 10){
-    feedback(canvas, "Congratulations, you completed acting practice", 10, 100);    
-  } 
-}
+    feedback(canvas, "Congratulations", 10, 100);
+    feedback(canvas, "You completed acting practice", 10, 150);
+  }
+  else {
+    for (var i = 0, n = actingLines[score].length; i < n; i++){
+      feedback(canvas, actingLines[score][i], 10, 100 + i * 50);
+    }
+  }
+} 
 
 function randomPhrase(phraseArr) {
     // returns a random phrase
@@ -378,7 +358,7 @@ function randomPhrase(phraseArr) {
 
 function feedback(canvas, text_to_output, x, y) {
     var ctx = canvas.getContext('2d');
-    ctx.font = '48px sans-serif';
+    ctx.font = '24px sans-serif';
     ctx.fillStyle = 'rgb(255,255,255)';
     ctx.fillText(text_to_output, x, y);
 }
